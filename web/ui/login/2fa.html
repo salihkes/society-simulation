@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>two-factor</title>
+<link rel="stylesheet" href="/style.css">
+<script type="module" src="/js/login-2fa.js"></script>
+</head>
+<body>
+<header id="top"></header>
+<div class="page narrow">
+	<div class="box">
+		<div class="box-body">
+			<h2>two-factor verification</h2>
+			<p class="note">signed in as <strong id="who"></strong>. enter the 6-digit code from your
+				authenticator app, or one of your backup codes.</p>
+			<div id="message" hidden></div>
+			<form id="verify">
+				<div class="form-row">
+					<label for="code">code</label>
+					<input type="text" id="code" name="code" autocomplete="one-time-code" inputmode="numeric" autofocus required>
+				</div>
+				<div class="button-row">
+					<button type="submit">verify</button>
+					<a href="/login">cancel</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<footer id="bottom"></footer>
+</body>
+</html>

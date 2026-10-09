@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<link rel="stylesheet" href="/style.css">
+<script type="module" src="/js/landing.js"></script>
+</head>
+<body>
+<header id="top"></header>
+<div class="page">
+	<div class="main">
+		<div class="box">
+			<div class="box-header">enter the world</div>
+			<div class="box-body">
+				<div class="button-row">
+					<a id="play" class="button big" href="/play/">play</a>
+					<a id="guest" class="button secondary" href="/play-as-guest" hidden>play as guest</a>
+				</div>
+				<p id="signed-out" class="note" hidden>
+					<a href="/login?next=%2Fplay%2F">log in</a> or <a href="/register">register</a>
+					to play with your own account.
+				</p>
+			</div>
+		</div>
+		<div class="box">
+			<div class="box-header">about</div>
+			<div class="box-body">
+				<p>A virtual world where you can explore, interact, and build.</p>
+				<p>Customize your character by <a href="/upload-decal">uploading a decal</a>
+					before entering the game.</p>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+		<div class="box">
+			<div class="box-header">quick links</div>
+			<div class="box-body">
+				<ul>
+					<li><a href="/r/">communities</a></li>
+					<li><a href="/upload-decal">upload a decal</a></li>
+					<li><a href="/settings">settings</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="box">
+			<div class="box-header">help</div>
+			<div class="box-body note">
+				<p>Use /transform humanoid or /transform countryball in-game to change your
+					character type.</p>
+				<p>Use /countryball TAG to become a countryball, for example
+					/countryball JAP_monarchy.</p>
+			</div>
+		</div>
+	</div>
+</div>
+<footer id="bottom"></footer>
+</body>
+</html>

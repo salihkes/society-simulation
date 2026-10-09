@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>users (admin)</title>
+<link rel="stylesheet" href="/style.css">
+<script type="module" src="/js/admin.js"></script>
+</head>
+<body>
+<header id="top"></header>
+<div class="page">
+	<div class="main">
+		<div class="box">
+			<div class="box-header">users (invite tree)</div>
+			<div class="box-body">
+				<p class="note">users are nested by who invited them. banning a user cascade-bans everyone
+					they invited, transitively. to restore a cascade-banned user, unban the ancestor who
+					caused it. you cannot ban another admin (remove them from roles.yaml first) or yourself.</p>
+				<div id="message" hidden></div>
+				<ul id="tree" class="user-tree"></ul>
+				<p id="none" class="muted" hidden>no users.</p>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+		<div class="box">
+			<div class="box-header">about bans</div>
+			<div class="box-body note">
+				<p>a ban is stored only on the directly banned user; cascades are worked out up the
+					invite chain, so unbanning the ancestor restores everyone underneath.</p>
+				<p>every ban and unban is appended to bans.log.jsonl beside the user database.</p>
+				<p>in-game sessions of a banned user are not kicked: they keep their connection until
+					they reconnect.</p>
+			</div>
+		</div>
+	</div>
+</div>
+<footer id="bottom"></footer>
+</body>
+</html>

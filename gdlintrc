@@ -1,0 +1,10 @@
+# GDScript lint rules for gdtoolkit (see docs/CODING_STYLE.md).
+max-line-length: 100
+max-file-lines: 1500
+max-public-methods: 40
+max-returns: 6
+function-arguments-number: 8
+excluded_directories: !!set
+  .godot: null
+  addons: null
+  android: null

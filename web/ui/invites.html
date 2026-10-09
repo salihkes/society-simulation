@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>your invites</title>
+<link rel="stylesheet" href="/style.css">
+<script type="module" src="/js/invites.js"></script>
+</head>
+<body>
+<header id="top"></header>
+<div class="page">
+	<div class="main">
+		<div class="box">
+			<div class="box-header">your invites</div>
+			<div class="box-body">
+				<div id="message" hidden></div>
+				<section id="allowed" hidden>
+					<p class="note">generate an invite link for someone you trust. they register through it and
+						join your invite chain: if you are ever banned, everyone you invited is banned too.</p>
+					<form id="create" class="inline-form">
+						<div class="form-row">
+							<label for="max_uses">uses</label>
+							<input type="number" id="max_uses" name="max_uses" value="1" min="1" max="100">
+						</div>
+						<div class="form-row">
+							<label for="ttl_days">expires after (days, 0 = never)</label>
+							<input type="number" id="ttl_days" name="ttl_days" value="7" min="0" max="90" step="0.5">
+						</div>
+						<button type="submit">+ create invite</button>
+					</form>
+					<div id="created" class="code-box" hidden>
+						<p><strong>invite created</strong>. share this link or let them scan the QR code:</p>
+						<p id="created-url" class="mono"></p>
+						<div id="created-qr" class="qr"></div>
+					</div>
+					<table>
+						<thead><tr><th>created</th><th>status</th><th>uses left</th><th>expires</th><th>link</th><th></th></tr></thead>
+						<tbody id="rows"></tbody>
+					</table>
+					<p id="none" class="muted" hidden>you haven't created any invites yet.</p>
+				</section>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+		<div class="box">
+			<div class="box-header">about invites</div>
+			<div class="box-body note">
+				<p>invite links are single-use by default and expire after 7 days.</p>
+				<p>the QR code on a fresh invite opens the registration form bound to that invite.</p>
+				<p>admins may revoke any invite. you can revoke your own at any time.</p>
+			</div>
+		</div>
+	</div>
+</div>
+<footer id="bottom"></footer>
+</body>
+</html>

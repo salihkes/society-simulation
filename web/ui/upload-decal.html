@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>character decal</title>
+<link rel="stylesheet" href="/style.css">
+<script type="module" src="/js/decal.js"></script>
+</head>
+<body>
+<header id="top"></header>
+<div class="page">
+	<div class="main">
+		<div class="box">
+			<div class="box-header">upload character decal</div>
+			<div class="box-body">
+				<div id="message" hidden></div>
+				<form id="upload">
+					<div class="form-row">
+						<label for="file">PNG image (max 5MB)</label>
+						<input type="file" id="file" name="file" accept="image/png" required>
+						<img id="preview" class="preview" alt="preview" hidden>
+					</div>
+					<div class="form-row">
+						<label for="character_type">character type</label>
+						<select id="character_type" name="character_type">
+							<option value="humanoid">Humanoid</option>
+							<option value="countryball">Countryball</option>
+						</select>
+					</div>
+					<button type="submit" id="send">upload decal</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+		<div class="box">
+			<div class="box-header">help</div>
+			<div class="box-body note">
+				<ul>
+					<li>Upload a PNG image (max 5MB).</li>
+					<li>Choose whether it is for a humanoid or a countryball.</li>
+					<li>Your character wears it in-game.</li>
+				</ul>
+				<p>Saved as <span id="name-humanoid" class="mono"></span> (humanoid) or
+					<span id="name-countryball" class="mono"></span> (countryball).</p>
+			</div>
+		</div>
+	</div>
+</div>
+<footer id="bottom"></footer>
+</body>
+</html>

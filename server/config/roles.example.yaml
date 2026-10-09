@@ -1,0 +1,17 @@
+# Role assignments for the community / subreddit feature.
+# Anyone listed under `posters` may submit new posts to a subreddit.
+# Comments and voting are open to all authenticated users.
+# Anyone listed under `admins` may edit subreddit wiki, create new
+# subreddits, ban/unban users, and revoke any invite.
+#
+# `inviters` is special: an OMITTED key (or null) means "any logged-in
+# user may invite." A LIST means only users listed may invite.
+
+posters:
+  - admin
+
+admins:
+  - admin
+
+# inviters:
+#   - admin

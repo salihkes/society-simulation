@@ -1,0 +1,27 @@
+{
+	"product_name": "Game",
+	"window_title": "Game",
+	"servers": [
+		"ws://127.0.0.1:2053",
+		"wss://example.com/mv"
+	],
+	"client_key": "change-me",
+	"voice_url": "wss://example.com/voice",
+	"cinema_url": "wss://example.com/cinema",
+	"android_package": "com.example.game",
+	"default_skin": "res://assets/entities/character/default_skin.png",
+	"home_region": "home",
+	"home_display_name": "Home",
+	"climate_name": "the home climate",
+	"studio_title": "Game Studio",
+	"studio_dir": "Game Studio",
+	"capture_prefix": "capture_",
+	"lift_building_name": "Apartments",
+	"lift_home_floor": 1,
+	"lift_home_label": "Home",
+	"conlang_name": "the in-game language",
+	"home_lonlat": [
+		0.0,
+		0.0
+	]
+}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>two-factor authentication</title>
+<link rel="stylesheet" href="/style.css">
+<script type="module" src="/js/twofa.js"></script>
+</head>
+<body>
+<header id="top"></header>
+<div class="page">
+	<div class="main">
+		<div class="box">
+			<div class="box-header">two-factor authentication</div>
+			<div class="box-body">
+				<div id="message" hidden></div>
+				<section id="enabled" hidden>
+					<p><strong>2FA is enabled</strong> on this account. backup codes remaining:
+						<span id="remaining"></span>.</p>
+					<p class="note">you are asked for a code from your authenticator app at every login.
+						if you lose access, use a backup code (each works once).</p>
+					<form id="disable">
+						<div class="form-row">
+							<label for="disable-password">confirm password</label>
+							<input type="password" id="disable-password" name="password" autocomplete="current-password" required>
+						</div>
+						<button type="submit">disable 2FA</button>
+					</form>
+				</section>
+				<section id="disabled" hidden>
+					<p class="note">two-factor authentication adds a code from your phone to every login:
+						someone who knows your password still cannot sign in without your authenticator app.</p>
+					<p class="note">works with any TOTP app: Google Authenticator, Authy, 1Password,
+						Bitwarden, and so on.</p>
+					<p><button id="start">enable 2FA</button></p>
+				</section>
+				<section id="enroll" hidden>
+					<p><strong>step 1.</strong> open your authenticator app and add a new account by scanning
+						the QR code, or paste the manual key into the app.</p>
+					<div class="button-row">
+						<div id="qr" class="qr"></div>
+						<div>
+							<p class="note"><strong>manual key</strong></p>
+							<p id="secret" class="mono code-box"></p>
+							<p class="muted">account: <span id="account"></span></p>
+							<p class="muted">setup link: <span id="uri" class="mono"></span></p>
+						</div>
+					</div>
+					<p><strong>step 2.</strong> enter the current 6-digit code from the app, plus your password.</p>
+					<form id="confirm">
+						<div class="form-row">
+							<label for="code">authenticator code</label>
+							<input type="text" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" required>
+						</div>
+						<div class="form-row">
+							<label for="confirm-password">your password</label>
+							<input type="password" id="confirm-password" name="password" autocomplete="current-password" required>
+						</div>
+						<div class="button-row">
+							<button type="submit">enable 2FA</button>
+							<a href="/settings/2fa">cancel</a>
+						</div>
+					</form>
+				</section>
+				<section id="codes" hidden>
+					<div class="message warn"><strong>this is the only time these codes are shown.</strong>
+						save them somewhere safe that is not your phone. each code works exactly once.</div>
+					<div id="code-list" class="codes code-box"></div>
+					<p class="note">if you run out, disable and re-enable 2FA to get a fresh batch.</p>
+					<p><a class="button" href="/settings/2fa">i've saved them, continue</a></p>
+				</section>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+		<div class="box">
+			<div class="box-header">other settings</div>
+			<div class="box-body">
+				<ul>
+					<li><a href="/settings">account</a></li>
+					<li><a href="/upload-decal">character decal</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<footer id="bottom"></footer>
+</body>
+</html>

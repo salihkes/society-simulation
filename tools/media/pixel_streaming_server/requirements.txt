@@ -1,0 +1,7 @@
+aiohttp
+aiortc
+mss
+numpy
+opencv-python
+pygetwindow
+pywin32

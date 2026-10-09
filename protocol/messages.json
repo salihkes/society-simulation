@@ -1,0 +1,626 @@
+{
+ "about": "Message contract of the world socket (server/net, client src/net/network_controller.gd). Tests on both sides check their handler tables against this file.",
+ "fields": {
+  "from": "who sends it: client, server or both",
+  "server": "handler in server/net, or null",
+  "client": "the client handles it",
+  "relay": "the server forwards it to the other clients",
+  "status": "present only when the type is dropped or unused today",
+  "sent_by": "senders outside the usual places, when not obvious"
+ },
+ "messages": {
+  "accessories_data": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "amb_state": {
+   "from": "both",
+   "server": "world.on_amb_state",
+   "client": true
+  },
+  "character_transform": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "chat_message": {
+   "from": "both",
+   "server": "chat.on_chat_message",
+   "client": true
+  },
+  "combat_bolt": {
+   "from": "both",
+   "server": "replication.on_combat_event",
+   "client": true,
+   "relay": true
+  },
+  "combat_health": {
+   "from": "both",
+   "server": "replication.on_combat_event",
+   "client": true,
+   "relay": true
+  },
+  "combat_saber_xf": {
+   "from": "both",
+   "server": "replication.on_combat_event",
+   "client": true,
+   "relay": true
+  },
+  "combat_ship_damage": {
+   "from": "both",
+   "server": "replication.on_combat_ship_damage",
+   "client": true,
+   "relay": true
+  },
+  "combat_weapon": {
+   "from": "both",
+   "server": "replication.on_combat_event",
+   "client": true,
+   "relay": true
+  },
+  "connected": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "elevator_req": {
+   "from": "both",
+   "server": "world.on_elevator_req",
+   "client": true
+  },
+  "emotion_update": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "get_player_monsters": {
+   "from": "client",
+   "server": "players.on_get_player_monsters",
+   "client": false
+  },
+  "get_players": {
+   "from": "client",
+   "server": "players.on_get_players",
+   "client": false
+  },
+  "get_texture": {
+   "from": "client",
+   "server": "players.on_get_texture",
+   "client": false
+  },
+  "handshake": {
+   "from": "client",
+   "server": "world.on_handshake",
+   "client": false
+  },
+  "household_cmd": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "join_place": {
+   "from": "client",
+   "server": "places.on_join_place",
+   "client": false
+  },
+  "life_cmd": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "list_places": {
+   "from": "client",
+   "server": "places.on_list_places",
+   "client": false
+  },
+  "login": {
+   "from": "client",
+   "server": "accounts.on_login",
+   "client": false
+  },
+  "login_response": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "login_success": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "map_full_update": {
+   "from": "both",
+   "server": "world_map.on_map_full_update",
+   "client": true
+  },
+  "map_online_owners": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "map_player_owner": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "map_request_state": {
+   "from": "client",
+   "server": "world_map.on_map_request_state",
+   "client": false
+  },
+  "map_state": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "mind_cmd": {
+   "from": "client",
+   "server": "world.on_mind_cmd",
+   "client": false,
+   "sent_by": [
+    "client/src/studio/studio.gd",
+    "tools/run/mindctl.py"
+   ]
+  },
+  "mind_reply": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "monster_despawn": {
+   "from": "both",
+   "server": "replication.on_monster_despawn",
+   "client": true,
+   "relay": true
+  },
+  "monster_spawn": {
+   "from": "both",
+   "server": "replication.on_monster_spawn",
+   "client": true,
+   "relay": true
+  },
+  "monster_update": {
+   "from": "both",
+   "server": "replication.on_monster_update",
+   "client": true,
+   "relay": true
+  },
+  "npc_action_event": {
+   "from": "both",
+   "server": "npc.on_npc_action_event",
+   "client": true
+  },
+  "npc_addr": {
+   "from": "client",
+   "server": "world.on_npc_addr",
+   "client": true
+  },
+  "npc_audio_data": {
+   "from": "nobody",
+   "server": null,
+   "client": true,
+   "status": "unused: nothing sends it"
+  },
+  "npc_audio_sync": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "npc_authority": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "npc_chat": {
+   "from": "client",
+   "server": "npc.on_npc_chat",
+   "client": false
+  },
+  "npc_chat_response": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "npc_dialog": {
+   "from": "client",
+   "server": "npc.on_npc_dialog",
+   "client": false
+  },
+  "npc_initial_state": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "npc_say": {
+   "from": "both",
+   "server": "world.on_npc_say",
+   "client": true
+  },
+  "npc_schedule": {
+   "from": "server",
+   "server": "npc.on_npc_schedule",
+   "client": true
+  },
+  "npc_transform": {
+   "from": "both",
+   "server": "npc.on_npc_transform",
+   "client": true
+  },
+  "npc_vehicle": {
+   "from": "nobody",
+   "server": null,
+   "client": true,
+   "status": "unused: nothing sends it"
+  },
+  "npc_voice_chat": {
+   "from": "client",
+   "server": "npc.on_npc_voice_chat",
+   "client": false
+  },
+  "object_despawn": {
+   "from": "nobody",
+   "server": null,
+   "client": true,
+   "status": "unused: nothing sends it"
+  },
+  "object_grab": {
+   "from": "both",
+   "server": "replication.on_object_grab",
+   "client": false,
+   "relay": true
+  },
+  "object_release": {
+   "from": "both",
+   "server": "replication.on_object_release",
+   "client": false,
+   "relay": true
+  },
+  "object_spawn": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "object_update": {
+   "from": "both",
+   "server": "replication.on_object_update",
+   "client": true,
+   "relay": true
+  },
+  "par": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "parliament_ack": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "parliament_req": {
+   "from": "client",
+   "server": "world.on_parliament_req",
+   "client": false
+  },
+  "pc_close": {
+   "from": "client",
+   "server": "world.on_pc_close",
+   "client": false
+  },
+  "pc_open": {
+   "from": "client",
+   "server": "world.on_pc_open",
+   "client": false
+  },
+  "pc_session": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "pck_manifest": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "place_info": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "place_plot_object": {
+   "from": "client",
+   "server": "plots.on_place_plot_object",
+   "client": false
+  },
+  "places_list": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "player_identity_update": {
+   "from": "server",
+   "server": null,
+   "client": true,
+   "sent_by": [
+    "server/place_server.py"
+   ]
+  },
+  "player_joined": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "player_left": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "player_list": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "player_monsters_list": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "player_transform": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "plot_object_remove": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "plot_object_spawn": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "plot_object_update": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "plots_info": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "register": {
+   "from": "client",
+   "server": "accounts.on_register",
+   "client": false
+  },
+  "register_response": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "remove_plot_object": {
+   "from": "nobody",
+   "server": "plots.on_remove_plot_object",
+   "client": false,
+   "status": "unused: nothing sends it"
+  },
+  "res_plan": {
+   "from": "server",
+   "server": "world.on_res_plan",
+   "client": true
+  },
+  "rest_req": {
+   "from": "both",
+   "server": "world.on_relay_to_others",
+   "client": true,
+   "relay": true
+  },
+  "scale_update": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "school_cmd": {
+   "from": "both",
+   "server": null,
+   "client": true,
+   "status": "dropped: the server has no handler"
+  },
+  "school_req": {
+   "from": "both",
+   "server": "world.on_relay_to_others",
+   "client": true,
+   "relay": true
+  },
+  "ship_board": {
+   "from": "both",
+   "server": "replication.on_ship_board",
+   "client": true,
+   "relay": true
+  },
+  "ship_depart": {
+   "from": "both",
+   "server": "replication.on_ship_depart",
+   "client": true,
+   "relay": true
+  },
+  "ship_state": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "ship_transform": {
+   "from": "both",
+   "server": "replication.on_ship_transform",
+   "client": true,
+   "relay": true
+  },
+  "system_message": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "teleport": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "texture_data": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "texture_info": {
+   "from": "nobody",
+   "server": null,
+   "client": true,
+   "status": "unused: nothing sends it"
+  },
+  "token_login": {
+   "from": "client",
+   "server": "accounts.on_token_login",
+   "client": false
+  },
+  "transform_update": {
+   "from": "client",
+   "server": "players.on_transform_update",
+   "client": false
+  },
+  "treaty_incoming": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "treaty_pending": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "treaty_propose": {
+   "from": "client",
+   "server": "world_map.on_treaty_propose",
+   "client": false
+  },
+  "treaty_resolved": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "treaty_respond": {
+   "from": "client",
+   "server": "world_map.on_treaty_respond",
+   "client": false
+  },
+  "update_plot_object": {
+   "from": "client",
+   "server": "plots.on_update_plot_object",
+   "client": false
+  },
+  "upload_decal": {
+   "from": "nobody",
+   "server": "players.on_upload_decal",
+   "client": false,
+   "status": "unused: nothing sends it"
+  },
+  "upload_place": {
+   "from": "client",
+   "server": "places.on_upload_place",
+   "client": false
+  },
+  "vehicle_despawn": {
+   "from": "server",
+   "server": "world.on_relay_to_others",
+   "client": false,
+   "relay": true
+  },
+  "vehicle_doors": {
+   "from": "client",
+   "server": null,
+   "client": true,
+   "status": "dropped: the server has no handler"
+  },
+  "vehicle_enter": {
+   "from": "both",
+   "server": "world.on_relay_to_others",
+   "client": true,
+   "relay": true
+  },
+  "vehicle_exit": {
+   "from": "both",
+   "server": "world.on_relay_to_others",
+   "client": true,
+   "relay": true
+  },
+  "vehicle_horn": {
+   "from": "client",
+   "server": null,
+   "client": true,
+   "status": "dropped: the server has no handler"
+  },
+  "vehicle_mode": {
+   "from": "client",
+   "server": null,
+   "client": true,
+   "status": "dropped: the server has no handler"
+  },
+  "vehicle_paint": {
+   "from": "client",
+   "server": null,
+   "client": true,
+   "status": "dropped: the server has no handler"
+  },
+  "vehicle_reset": {
+   "from": "client",
+   "server": null,
+   "client": true,
+   "status": "dropped: the server has no handler"
+  },
+  "vehicle_spawn": {
+   "from": "server",
+   "server": "world.on_relay_to_others",
+   "client": false,
+   "relay": true
+  },
+  "vehicle_transform": {
+   "from": "both",
+   "server": "world.on_relay_to_others",
+   "client": true,
+   "relay": true
+  },
+  "weather_update": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "world_clock": {
+   "from": "server",
+   "server": null,
+   "client": true
+  },
+  "world_cmd": {
+   "from": "both",
+   "server": "world.on_world_cmd",
+   "client": true,
+   "sent_by": [
+    "client/src/studio/studio.gd"
+   ]
+  },
+  "world_obs": {
+   "from": "client",
+   "server": "world.on_world_obs",
+   "client": false
+  },
+  "world_places": {
+   "from": "client",
+   "server": "world.on_world_places",
+   "client": false
+  },
+  "world_residents": {
+   "from": "server",
+   "server": null,
+   "client": true
+  }
+ }
+}

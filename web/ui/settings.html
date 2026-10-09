@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>settings</title>
+<link rel="stylesheet" href="/style.css">
+<script type="module" src="/js/settings.js"></script>
+</head>
+<body>
+<header id="top"></header>
+<div class="page">
+	<div class="main">
+		<div class="box">
+			<div class="box-header">account</div>
+			<div class="box-body">
+				<p>username: <strong id="who"></strong></p>
+				<ul>
+					<li><a href="/upload-decal">character decal</a> — the picture your character wears</li>
+					<li><a href="/settings/2fa">two-factor authentication</a> — <span id="twofa"></span></li>
+					<li id="invites" hidden><a href="/invites">invites</a> — bring someone in</li>
+					<li id="admin" hidden><a href="/admin/users">users</a> — bans and the invite tree</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+		<div class="box">
+			<div class="box-header">in-game commands</div>
+			<div class="box-body note">
+				<ul>
+					<li>/transform humanoid</li>
+					<li>/transform countryball</li>
+					<li>/teleport [location]</li>
+					<li>/myplot</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<footer id="bottom"></footer>
+</body>
+</html>

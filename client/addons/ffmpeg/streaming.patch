@@ -1,0 +1,243 @@
+diff --git a/ffmpeg_video_stream.cpp b/ffmpeg_video_stream.cpp
+index 0d167d1..e979e7e 100644
+--- a/ffmpeg_video_stream.cpp
++++ b/ffmpeg_video_stream.cpp
+@@ -163,8 +163,13 @@ void FFmpegVideoStreamPlayback::update_internal(double p_delta) {
+ 	}
+ 
+ 	if (out_of_sync) {
+-		print_line(vformat("Video too far out of sync (%.2f), seeking to %.2f", peek_frame->get_time(), playback_position));
+-		seek_into_sync();
++		if (decoder->is_network()) {
++			// a stream cannot be seeked; move the clock to it.
++			playback_position = peek_frame->get_time();
++		} else {
++			print_line(vformat("Video too far out of sync (%.2f), seeking to %.2f", peek_frame->get_time(), playback_position));
++			seek_into_sync();
++		}
+ 	}
+ 
+ 	double frame_time = get_current_frame_time();
+@@ -274,7 +279,16 @@ void FFmpegVideoStreamPlayback::update_internal(double p_delta) {
+ 
+ Error FFmpegVideoStreamPlayback::load(Ref<FileAccess> p_file_access) {
+ 	decoder = Ref<VideoDecoder>(memnew(VideoDecoder(p_file_access)));
++	return _load_decoder();
++}
++
++// a network source, opened by FFmpeg itself.
++Error FFmpegVideoStreamPlayback::load_url(const String &p_url) {
++	decoder = Ref<VideoDecoder>(memnew(VideoDecoder(p_url)));
++	return _load_decoder();
++}
+ 
++Error FFmpegVideoStreamPlayback::_load_decoder() {
+ 	decoder->start_decoding();
+ 	Vector2i size = decoder->get_size();
+ 	if (decoder->get_decoder_state() == VideoDecoder::FAULTED) {
+diff --git a/ffmpeg_video_stream.h b/ffmpeg_video_stream.h
+index 3c35bfc..4f728f4 100644
+--- a/ffmpeg_video_stream.h
++++ b/ffmpeg_video_stream.h
+@@ -142,6 +142,8 @@ protected:
+ 
+ public:
+ 	Error load(Ref<FileAccess> p_file_access);
++	Error load_url(const String &p_url);
++	Error _load_decoder();
+ 
+ 	STREAM_FUNC_REDIRECT_0_CONST(bool, is_paused);
+ 	STREAM_FUNC_REDIRECT_1(void, update, double, p_delta);
+@@ -164,7 +166,18 @@ class FFmpegVideoStream : public VideoStream {
+ protected:
+ 	static void _bind_methods(){}; // Required by GDExtension, do not remove
+ 	Ref<VideoStreamPlayback> instantiate_playback_internal() {
+-		Ref<FileAccess> fa = FileAccess::open(get_file(), FileAccess::READ);
++		String path = get_file();
++		// anything with a URL scheme other than res/user goes
++		// straight to FFmpeg (http, https, hls playlists, rtsp, udp).
++		if (path.contains("://") && !path.begins_with("res://") && !path.begins_with("user://")) {
++			Ref<FFmpegVideoStreamPlayback> pb;
++			pb.instantiate();
++			if (pb->load_url(path) != OK) {
++				return nullptr;
++			}
++			return pb;
++		}
++		Ref<FileAccess> fa = FileAccess::open(path, FileAccess::READ);
+ 		if (!fa.is_valid()) {
+ 			return Ref<VideoStreamPlayback>();
+ 		}
+diff --git a/video_decoder.cpp b/video_decoder.cpp
+index b40b5e5..89d9e9f 100644
+--- a/video_decoder.cpp
++++ b/video_decoder.cpp
+@@ -102,19 +102,34 @@ int64_t VideoDecoder::_stream_seek_callback(void *p_opaque, int64_t p_offset, in
+ }
+ 
+ void VideoDecoder::prepare_decoding() {
+-	avio_seek(io_context, 0, SEEK_SET);
+-	if (!io_context) {
+-		const int context_buffer_size = 4096;
+-		unsigned char *context_buffer = (unsigned char *)av_malloc(context_buffer_size);
+-		io_context = avio_alloc_context(context_buffer, context_buffer_size, 0, this, &VideoDecoder::_read_packet_callback, nullptr, &VideoDecoder::_stream_seek_callback);
+-	}
++	int open_input_res;
++	if (!url.is_empty()) {
++		// a network source. FFmpeg's own protocols (http, https,
++		// hls, rtsp...) read it; no Godot FileAccess involved.
++		static bool network_ready = false;
++		if (!network_ready) {
++			avformat_network_init();
++			network_ready = true;
++		}
++		format_context = avformat_alloc_context();
++		format_context->flags |= AVFMT_FLAG_GENPTS;
++		format_context->video_codec = forced_video_codec;
++		open_input_res = avformat_open_input(&format_context, url.utf8().get_data(), nullptr, nullptr);
++	} else {
++		avio_seek(io_context, 0, SEEK_SET);
++		if (!io_context) {
++			const int context_buffer_size = 4096;
++			unsigned char *context_buffer = (unsigned char *)av_malloc(context_buffer_size);
++			io_context = avio_alloc_context(context_buffer, context_buffer_size, 0, this, &VideoDecoder::_read_packet_callback, nullptr, &VideoDecoder::_stream_seek_callback);
++		}
+ 
+-	format_context = avformat_alloc_context();
+-	format_context->pb = io_context;
+-	format_context->flags |= AVFMT_FLAG_GENPTS;
+-	format_context->video_codec = forced_video_codec;
++		format_context = avformat_alloc_context();
++		format_context->pb = io_context;
++		format_context->flags |= AVFMT_FLAG_GENPTS;
++		format_context->video_codec = forced_video_codec;
+ 
+-	int open_input_res = avformat_open_input(&format_context, "dummy", nullptr, nullptr);
++		open_input_res = avformat_open_input(&format_context, "dummy", nullptr, nullptr);
++	}
+ 	input_opened = open_input_res >= 0;
+ 	ERR_FAIL_COND_MSG(!input_opened, vformat("Error opening file or stream: %s", ffmpeg_get_error_message(open_input_res)));
+ 
+@@ -166,8 +181,10 @@ void VideoDecoder::prepare_decoding() {
+ 
+ 	video_stream = format_context->streams[stream_index];
+ 	video_time_base_in_seconds = video_stream->time_base.num / (double)video_stream->time_base.den;
+-	if (video_stream->duration > 0) {
++	if (video_stream->duration > 0 && video_stream->duration != AV_NOPTS_VALUE) {
+ 		duration = video_stream->duration * video_time_base_in_seconds * 1000.0;
++	} else if (format_context->duration == AV_NOPTS_VALUE || format_context->duration <= 0) {
++		duration = 0.0; // a live stream has no length
+ 	} else {
+ 		duration = format_context->duration / (double)AV_TIME_BASE * 1000.0;
+ 	}
+@@ -243,6 +260,13 @@ Error VideoDecoder::recreate_codec_context() {
+ }
+ 
+ void VideoDecoder::_seek_command(double p_target_timestamp) {
++	if (!url.is_empty()) {
++		// a network source is not seeked; play on from where it is.
++		skip_output_until_time = -1.0;
++		decoder_state = DecoderState::READY;
++		skip_current_outputs.clear();
++		return;
++	}
+ 	avcodec_flush_buffers(video_codec_context);
+ 	av_seek_frame(format_context, video_stream->index, (long)(p_target_timestamp / video_time_base_in_seconds / 1000.0), AVSEEK_FLAG_BACKWARD);
+ 	// No need to seek the audio stream separately since it is seeked automatically with the video stream
+@@ -388,7 +412,20 @@ void VideoDecoder::_read_decoded_frames(AVFrame *p_received_frame) {
+ 
+ 		// use `best_effort_timestamp` as it can be more accurate if timestamps from the source file (pts) are broken.
+ 		int64_t frame_timestamp = p_received_frame->best_effort_timestamp != AV_NOPTS_VALUE ? p_received_frame->best_effort_timestamp : p_received_frame->pts;
+-		double frame_time = (frame_timestamp - video_stream->start_time) * video_time_base_in_seconds * 1000.0;
++		// network demuxers (hls, mpegts) may leave the stream's
++		// start_time unset; fall back to the container's, then to zero.
++		int64_t video_start = video_stream->start_time;
++		if (video_start == AV_NOPTS_VALUE) {
++			video_start = format_context->start_time != AV_NOPTS_VALUE ? av_rescale_q(format_context->start_time, AV_TIME_BASE_Q, video_stream->time_base) : 0;
++		}
++		double frame_time = (frame_timestamp - video_start) * video_time_base_in_seconds * 1000.0;
++		if (!url.is_empty()) {
++			double t = frame_timestamp * video_time_base_in_seconds;
++			if (network_base_seconds < 0.0) {
++				network_base_seconds = t;
++			}
++			frame_time = (t - network_base_seconds) * 1000.0;
++		}
+ 
+ 		if (skip_output_until_time > frame_time || skip_current_outputs.is_set()) {
+ 			continue;
+@@ -485,7 +522,18 @@ void VideoDecoder::_read_decoded_audio_frames(AVFrame *p_received_frame) {
+ 
+ 		// use `best_effort_timestamp` as it can be more accurate if timestamps from the source file (pts) are broken.
+ 		int64_t frame_timestamp = p_received_frame->best_effort_timestamp != AV_NOPTS_VALUE ? p_received_frame->best_effort_timestamp : p_received_frame->pts;
+-		double frame_time = (frame_timestamp - audio_stream->start_time) * audio_time_base_in_seconds * 1000.0;
++		int64_t audio_start = audio_stream->start_time;
++		if (audio_start == AV_NOPTS_VALUE) {
++			audio_start = format_context->start_time != AV_NOPTS_VALUE ? av_rescale_q(format_context->start_time, AV_TIME_BASE_Q, audio_stream->time_base) : 0;
++		}
++		double frame_time = (frame_timestamp - audio_start) * audio_time_base_in_seconds * 1000.0;
++		if (!url.is_empty()) {
++			double t = frame_timestamp * audio_time_base_in_seconds;
++			if (network_base_seconds < 0.0) {
++				network_base_seconds = t;
++			}
++			frame_time = (t - network_base_seconds) * 1000.0;
++		}
+ 
+ 		if (skip_output_until_time > frame_time || skip_current_outputs.is_set()) {
+ 			continue;
+@@ -789,6 +837,15 @@ VideoDecoder::VideoDecoder(Ref<FileAccess> p_file) {
+ 	audio_buffer_mutex.instantiate();
+ }
+ 
++VideoDecoder::VideoDecoder(const String &p_url) {
++	url = p_url;
++	available_textures_mutex.instantiate();
++	hw_transfer_frames_mutex.instantiate();
++	scaler_frames_mutex.instantiate();
++	decoded_frames_mutex.instantiate();
++	audio_buffer_mutex.instantiate();
++}
++
+ VideoDecoder::~VideoDecoder() {
+ 	if (thread != nullptr) {
+ 		thread_abort.set_to(true);
+diff --git a/video_decoder.h b/video_decoder.h
+index acfaf49..64075b5 100644
+--- a/video_decoder.h
++++ b/video_decoder.h
+@@ -156,6 +156,10 @@ private:
+ 	SafeFlag skip_current_outputs;
+ 	SafeNumeric<float> last_decoded_frame_time;
+ 	Ref<FileAccess> video_file;
++	String url; // when set, FFmpeg opens this itself (http, https, hls...)
++	// on a network source, time runs from the first decoded frame
++	// (HLS and MPEG-TS timestamps start anywhere), and seeking is never done.
++	double network_base_seconds = -1.0;
+ 	BitField<HardwareVideoDecoder> target_hw_video_decoders = HardwareVideoDecoder::ANY;
+ 	Ref<core_bind::Mutex> available_textures_mutex;
+ 	List<Ref<ImageTexture>> available_textures;
+@@ -215,6 +219,8 @@ public:
+ 	FFmpegFrameFormat get_frame_format() const { return frame_format; }
+ 
+ 	VideoDecoder(Ref<FileAccess> p_file);
++	VideoDecoder(const String &p_url);
++	bool is_network() const { return !url.is_empty(); }
+ 	~VideoDecoder();
+ };
+ 
+diff --git a/yuv_to_rgb.glsl b/yuv_to_rgb.glsl
+index c37ca13..f399f4f 100644
+--- a/yuv_to_rgb.glsl
++++ b/yuv_to_rgb.glsl
+@@ -13,6 +13,10 @@ layout(rgba8, set = 4, binding = 0) uniform restrict writeonly image2D output_im
+ 
+ layout(push_constant, std430) uniform Params {
+ 	bool use_alpha;
++	// Godot 4.7 requires the block to match the 16 bytes sent.
++	uint pad0;
++	uint pad1;
++	uint pad2;
+ }
+ params;
+ 

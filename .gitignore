@@ -1,0 +1,119 @@
+# This repository ships CODE ONLY: the kit. Each user's world (scenes, models,
+# textures, sounds, residents, lessons, identity) is personal data that stays
+# local; coding assistants help each user build their own.
+
+# --- Personal configuration: only the *.example.* files are tracked ---
+.env
+**/.env
+!**/.env.example
+client/data/*
+!client/data/*.example.*
+server/config/*
+!server/config/*.example.*
+tools/local.env
+
+# --- The world: content, not code ---
+client/assets/
+client/android/
+client/export_presets*.cfg
+!client/export_presets.example.cfg
+server/data/
+client/*.res
+server/assets/
+server/lessons/
+web/play/
+
+# World-specific pipelines (each builds one place of one world)
+tools/art/*/
+!tools/art/blender/
+!tools/art/roblox_export/
+tools/bake/cityforge/cache/
+tools/bake/planetforge/.cache/
+tools/bake/regionforge/cache/
+tools/bake/regionforge/cities/
+tools/bake/regionforge/roads/
+tools/media/tv_streamer/cache/
+
+# World-specific code (kept locally)
+server/*_NPC_API.md
+tools/art/build_theater_sample.py
+tools/bake/cityforge/
+tools/bake/fetch_flags.py
+tools/bake/planetforge/
+tools/bake/regionforge/region.json
+tools/bake/regionforge/test_overlay_mapping.py
+tools/bake/regionforge/test_roads.py
+tools/deploy/machine_room/
+tools/deploy/vds/
+tools/dev/client_baseline.txt
+client/tools/packs.json
+client/tools/world/
+client/tests/world/
+client/src/props/interiors/*/
+client/src/props/ezan_speaker_prop.gd
+client/src/world/region/japanese_junction.gd
+client/tests/test_japanese_junction.gd
+client/src/world/region/city_preview.gd
+
+# --- Third-party binaries: built or installed locally (see each addon's docs) ---
+client/addons/godotopenxrvendors/
+client/addons/ffmpeg/macos/
+client/addons/ffmpeg/linux64/
+client/addons/ffmpeg/win64/
+client/addons/*/bin/
+client/addons/*/example/
+
+# --- Not shipped until remastered ---
+council/
+tv/
+vendor/
+
+
+# --- Build output, caches, environments ---
+/build/
+.godot/
+*.uid
+*.import
+*.pck
+*.apk
+*.aab
+*.exe
+*.dmg
+*.app
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.log
+logs/
+
+# --- Editor and OS files ---
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+._*
+.backups/
+*.bak
+*.orig
+*.tmp
+
+
+# --- Media anywhere: the kit never ships sounds, video or models ---
+*.mp3
+*.wav
+*.ogg
+*.flac
+*.m4a
+*.aac
+*.opus
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.glb
+*.gltf
+*.fbx
+*.blend

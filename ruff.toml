@@ -1,0 +1,15 @@
+# Python lint and format rules (see docs/CODING_STYLE.md).
+line-length = 100
+target-version = "py313"
+extend-exclude = ["vendor", "build", "**/.venv", "**/__pycache__", "tools/opensource"]
+
+[lint]
+# pyflakes, pycodestyle, bugbear, simplify, mccabe (function complexity).
+select = ["F", "E", "W", "B", "SIM", "C90"]
+ignore = ["E501"]  # the formatter owns line length
+
+[lint.mccabe]
+max-complexity = 15
+
+[format]
+quote-style = "preserve"

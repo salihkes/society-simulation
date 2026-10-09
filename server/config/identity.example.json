@@ -1,0 +1,34 @@
+{
+  "product_name": "My Game",
+  "community_home": {"name": "announcements", "title": "Announcements",
+                     "description": "Official game announcements, updates, and patch notes."},
+  "external_domain": "example.com",
+  "client_key": "change-me",
+  "root_user": "admin",
+  "sovereign_user": "admin",
+  "default_plots": [
+    {"plot_id": "plot_1", "owner": "admin", "name": "Admin's Plot"}
+  ],
+  "fallback_regions": {
+    "home": "home",
+    "regions": [
+      {"id": "home", "center": [0, 0], "lonlat": [0.0, 51.4779],
+       "utc_offset": 0, "real_weather": true}
+    ]
+  },
+  "real_weather_region": "home",
+  "real_weather_label": "home",
+  "librarian_dir": "",
+  "script_converter": "",
+  "script_written_forms": {},
+  "script_spoken_forms": {},
+  "script_name": "the city script",
+  "real_weather_default_latlon": [51.4779, 0.0],
+  "city_name_prompt": "The city has no name yet.",
+  "computer_stickies_path": "Library/Application Support/Stickies/stickies",
+  "lesson_written_field": "written",
+  "council_package": "council",
+  "teleport_destinations": {"spawn": {"x": 0, "y": 2, "z": 0}},
+  "speech_language": "English",
+  "speech_rules": ""
+}

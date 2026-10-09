@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>register</title>
+<link rel="stylesheet" href="/style.css">
+<script type="module" src="/js/register.js"></script>
+</head>
+<body>
+<header id="top"></header>
+<div class="page narrow">
+	<div class="box">
+		<div class="box-body">
+			<h2>register</h2>
+			<div id="invite" hidden></div>
+			<div id="message" hidden></div>
+			<form id="register" hidden>
+				<div class="form-row">
+					<label for="username">username</label>
+					<input type="text" id="username" name="username" autocomplete="username" required>
+				</div>
+				<div class="form-row">
+					<label for="password">password</label>
+					<input type="password" id="password" name="password" autocomplete="new-password" required>
+				</div>
+				<div class="form-row">
+					<label for="confirm_password">confirm password</label>
+					<input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password" required>
+				</div>
+				<div id="dev" class="form-row" hidden>
+					<label for="dev_passphrase">dev passphrase</label>
+					<p class="note">without an invite, paste the dev passphrase here. accounts created this
+						way are root accounts and are not part of any invite chain.</p>
+					<input type="password" id="dev_passphrase" name="dev_passphrase" autocomplete="off"
+						placeholder="dev passphrase (optional)">
+				</div>
+				<button type="submit">create account</button>
+			</form>
+			<p class="note">already have an account? <a href="/login">log in</a>.</p>
+		</div>
+	</div>
+</div>
+<footer id="bottom"></footer>
+</body>
+</html>

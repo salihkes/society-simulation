@@ -1,0 +1,27 @@
+{
+	"_comment": "Copy to tools/packs.json and list your world's server-streamed packs. Every folder in roots is excluded from the web main pck and built by tools/build_packs_cli.gd into server/assets/pck/<name>.pck. required packs gate play until downloaded; priority orders the rest (lower first). With entries, only the transitive dependencies of those files (within the roots) are packed; without entries the whole folder ships. on_demand packs are fetched only when asked for (a player's own character). region (an id from regions.json) holds a pack until the player enters that region; the home region is entered at connect.",
+	"packs": {
+		"home_city": {
+			"roots": ["res://assets/art/models/home_city/"],
+			"entries": ["res://assets/art/models/home_city/city.scn"],
+			"required": true,
+			"priority": 10,
+			"region": "home"
+		},
+		"street_props": {
+			"roots": ["res://assets/art/models/street_props/"],
+			"priority": 20
+		},
+		"far_city": {
+			"roots": ["res://assets/art/models/far_city/"],
+			"required": true,
+			"priority": 10,
+			"region": "far_city"
+		},
+		"player_character": {
+			"roots": ["res://assets/entities/custom_character/player_name/"],
+			"on_demand": true,
+			"priority": 90
+		}
+	}
+}

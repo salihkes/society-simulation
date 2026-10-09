@@ -1,0 +1,13 @@
+{
+  "bbox_lonlat": [-1.0, 50.5, 1.0, 52.5],
+  "tile_size": 1024,
+  "quads": 64,
+  "dem_zoom": 9,
+  "far_compression": 4.0,
+  "far_height_scale": 0.5,
+  "city_stamps": [],
+  "home_geo": "client/assets/world/geo/home",
+  "home_city": "home",
+  "roads_config": "roads/home_to_next.json",
+  "description": "Terrain coverage around the home city. home_geo is the home city's terrain bake (meta.json and rasters); city_stamps lists cities/<id>.json fits; roads_config is the road corridor build_roads.py bakes."
+}

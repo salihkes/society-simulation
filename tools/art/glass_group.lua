@@ -1,0 +1,1 @@
+local m=Instance.new("Model",workspace); m.Name="HalfTransparentParts"; for _,v in ipairs(workspace:GetDescendants()) do if v:IsA("BasePart") and math.abs(v.Transparency - 0.5) < 0.01 and v ~= m and not v:IsDescendantOf(m) then v.Parent = m end end

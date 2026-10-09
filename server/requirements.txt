@@ -1,0 +1,14 @@
+# Core server dependencies
+websockets
+aiohttp
+pyyaml
+
+# The website's 2FA and QR codes - optional
+pyotp
+qrcode
+
+# Media streaming (TV) - optional
+opencv-python
+numpy
+av
+pydub

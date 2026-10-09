@@ -1,0 +1,36 @@
+# Project formatting (see docs/CODING_STYLE.md).
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{gd,gdshader,gdshaderinc}]
+indent_style = tab
+indent_size = 4
+max_line_length = 100
+
+[*.py]
+indent_style = space
+indent_size = 4
+max_line_length = 100
+
+[*.{sh,ps1}]
+indent_style = tab
+
+[*.{js,html,css,json,yml,yaml,toml}]
+indent_style = space
+indent_size = 2
+
+[*.{tscn,tres,godot,import,cfg}]
+# Written by Godot; leave as the engine writes them.
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+[vendor/**]
+# Third-party code keeps its own style.
+indent_style = unset
+indent_size = unset
+max_line_length = unset
